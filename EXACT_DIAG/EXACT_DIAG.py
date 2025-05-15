@@ -50,7 +50,7 @@ except:
 # In[ ]:
 
 
-var=[N,t1,v1,d]
+var=[N,parameters[1],parameters[2],parameters[3]]
 name_var=[MASTER_DIR+"/N_","T1_","V1_","D_"]
 pubvar=class_WF.publisher(name_var,var,["T2","C","E"])
 pubvar.create()
