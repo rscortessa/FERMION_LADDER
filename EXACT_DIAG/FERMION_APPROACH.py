@@ -33,7 +33,8 @@ def S_part(sparse_eig_vec,N_sites,part,eps):
     return SL_2
 
 
-def H_ladder(N,t0,t1,t2,v1,v2,d):
+def H_ladder_G1(N,t0,t1,t2,v1,v2,d):
+
     PBC=True
     if PBC==False:
         V1_edges=[(i,i+N,0) for i in range(N)]
@@ -42,9 +43,16 @@ def H_ladder(N,t0,t1,t2,v1,v2,d):
         edges=V1_edges+V2_edges+to_edges
     else:
         V1_edges=[(i,i+N,0) for i in range(N)]
-        V2_edges=[(N%(i+1),i+N,1) for i in range(N)]
-        to_edges=[(i,N%(i+1),2) for i in range(N)]+[(i,N%(i+1)+N,2) for i in range(N)]
+        V2_edges=[((i+1)%N,i+N,1) for i in range(N)]
+        to_edges=[(i,(i+1)%N,2) for i in range(N)]+[(i+N,(i+1)%N+N,2) for i in range(N)]
         edges=V1_edges+V2_edges+to_edges
+
+    #print("V1")
+    #print(V1_edges)
+    #print("V2")
+    #print(V2_edges)
+    #print("to")
+    #print(to_edges)
         
     
     f=np.exp(1j*np.pi*d)
@@ -65,16 +73,59 @@ def H_ladder(N,t0,t1,t2,v1,v2,d):
             H+=v2* (nc(hi,i)*nc(hi,k))
         elif a==2:
             H+=-t0* (cdag(hi,i)*c(hi,k)*f+cdag(hi,k)*c(hi,i)*np.conjugate(f))
-    
     return H
+
+def H_ladder_G2(N,t0,t1,t2,v1,v2,d):
+
+    PBC=True
+    if PBC==False:
+        V1_edges=[(i,i+1,0) for i in range(0,2*N,2)]
+        V2_edges=[(i+1,i+2,1) for i in range(0,2*(N-1),2)]
+        to_edges=[(i,i+2,2) for i in range(0,2*(N-1),2)]+[(i,i+2,2) for i in range(1,2*N-1,2)]
+        edges=V1_edges+V2_edges+to_edges
+    else:
+        V1_edges=[(i,i+1,0) for i in range(0,2*N,2)]
+        V2_edges=[(i+1,(i+2)%(2*N),1) for i in range(0,2*N,2)]
+        to_edges=[(i,(i+2)%(2*N),2) for i in range(0,2*N,2)]+[(i,(i+2)%(2*N),2) for i in range(1,2*N+1,2)]
+        edges=V1_edges+V2_edges+to_edges
+
+    #    print("V1")
+    #    print(V1_edges)
+    #    print("V2")
+    #    print(V2_edges)
+    #    print("to")
+    #    print(to_edges)
+        
+    
+    f=np.exp(1j*np.pi*d)
+    
+    g =nk.graph.Graph(edges=edges)
+    N_sites=g.n_nodes
+    colored_edges = list(zip(g.edges(), g.edge_colors))
+    
+    hi = nk.hilbert.SpinOrbitalFermions(N_sites, s=None)
+
+    H=0.0
+    for ((i,k),a) in colored_edges:
+        if a==0:
+            H+=-t1* (cdag(hi,i,dtype=complex)*c(hi,k)+cdag(hi,k)*c(hi,i))
+            H+=v1* (nc(hi,i)*nc(hi,k))
+        elif a==1:
+            H+=-t2* (cdag(hi,i)*c(hi,k)+cdag(hi,k)*c(hi,i))
+            H+=v2* (nc(hi,i)*nc(hi,k))
+        elif a==2:
+            H+=-t0* (cdag(hi,i)*c(hi,k)*f+cdag(hi,k)*c(hi,i)*np.conjugate(f))
+    return H
+
+
  
 def GS_WF(H,eps):
     #eig_vals,eig_vec=eigsh(H.to_sparse(),k=1,which="SA")
     
     eig_vals,eig_vec=eigsh(H.to_sparse())
-    print(H.to_sparse())
-    print(eig_vals)
-    print(len(eig_vec[0]))
+    #print(H.to_sparse())
+    #print(eig_vals)
+    #print(len(eig_vec[0]))
     
     eig_vals,eig_vec=eigsh(H.to_sparse(),k=1,which="SA")
     print(eig_vals)

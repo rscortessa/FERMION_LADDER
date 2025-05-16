@@ -14,7 +14,7 @@ import sys
 import os
 import FERMION_APPROACH as FA
 import Methods.class_WF as class_WF
-
+from scipy.sparse import csr_matrix, save_npz, load_npz
 
 # In[5]:
 
@@ -34,8 +34,14 @@ Nt2=10
 N_sites=2*N
 eps=10**(-16)
 t2=[i/(Nt2*1.0) for i in range(Nt2+1)]
+geo="G2"
 
-
+if geo=="G1":
+    Ham=FA.H_ladder_G1
+elif geo=="G2":
+    Ham=FA.H_ladder_G2
+    
+    
 # In[ ]:
 
 
@@ -52,20 +58,25 @@ except:
 
 var=[N,parameters[1],parameters[2],parameters[3]]
 name_var=[MASTER_DIR+"/N_","T1_","V1_","D_"]
-pubvar=class_WF.publisher(name_var,var,["T2","C","E"])
+pubvar=class_WF.publisher(name_var,var,["T2","SL2","SL4","C","E"+geo])
 pubvar.create()
 
 
 # In[2]:
 
 print("WORKING WITH:")
-print("N",N,"t0",t0,"t1",t1,"t2","V1",v1,"V2",v2,"f",d)
+print("N=",N,"t_0=",t0,"t_1=",t1,"V_1=",v1,"V_2=",v2,"f=",d)
+ii=0
 for t_aux in t2:
     print("t2=",t_aux)
-    H=FA.H_ladder(N,t0,t1,t_aux,v1,v2,d)
+    H=Ham(N,t0,t1,t_aux,v1,v2,d)
     E,sparse_eig_vec=FA.GS_WF(H,eps)
-    c_charge=FA.S_part(sparse_eig_vec,N_sites,2,eps)-FA.S_part(sparse_eig_vec,N_sites,4,eps)
-    pubvar.write([0.0,t_aux,0.0,c_charge,0.0,E[0]])
+    save_npz(MASTER_DIR+"/"+"N_"+str(parameters[0])+"T1_"+str(parameters[1])+"V1_"+str(parameters[2])+"D_"+str(parameters[3])+"T2_"+str(ii)+geo+".npz",sparse_eig_vec)
+    SL2=FA.S_part(sparse_eig_vec,N_sites,2,eps)
+    SL4=FA.S_part(sparse_eig_vec,N_sites,4,eps)
+    c_charge=SL2-SL4
+    pubvar.write([0.0,t_aux,0.0,SL2,0.0,SL4,0.0,c_charge,0.0,E[0]])
+    ii+=1
 pubvar.close()
 
 
