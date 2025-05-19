@@ -11,7 +11,7 @@ from netket.operator.fermion import number as nc
 from scipy.sparse.linalg import eigsh
 from scipy.sparse import csr_matrix
 import numpy as np
-
+from scipy.stats import log
 
 # In[150]:
 
@@ -27,9 +27,13 @@ def S_part(sparse_eig_vec,N_sites,part,eps):
         B=aux@aux.conjugate().T
         rho+=B
     
-    s_values,s_vec=eigsh(rho)
-    renorm_s_values=s_values[np.abs(s_values)>eps]
-    SL_2=-1.0*renorm_s_values@np.log(renorm_s_values)
+    
+    #s_values,s_vec=eigsh(rho,k=x-1)
+    #renorm_s_values=s_values[np.abs(s_values)>eps]
+    #SL_2=-1.0*renorm_s_values@np.log(renorm_s_values)
+    S=-rho@log(rho)
+    SL_2=S.diagonal().sum()
+
     return SL_2
 
 
