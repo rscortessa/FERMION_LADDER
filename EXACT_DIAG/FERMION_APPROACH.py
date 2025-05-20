@@ -9,6 +9,7 @@ from netket.operator.fermion import destroy as c
 from netket.operator.fermion import create as cdag
 from netket.operator.fermion import number as nc
 from scipy.sparse.linalg import eigsh
+from scipy.linalg import eigvalsh
 from scipy.sparse import csr_matrix
 import numpy as np
 from scipy.stats import log
@@ -19,20 +20,27 @@ from scipy.stats import log
 def S_part(sparse_eig_vec,N_sites,part,eps):
     
     x=2**(int(N_sites/part))
-    rho=csr_matrix(np.zeros((x,x)))
+    rho=csr_matrix(np.zeros((x,x)),dtype=complex)
     N_iter=2**(int((part-1)*N_sites/part))
 
     for i in range(N_iter):
         aux=sparse_eig_vec[0+x*i:x*(i+1)]
-        B=aux@aux.conjugate().T
+        #print(aux.shape)
+        aux_2=aux.getH()
+        #print(aux_2.shape)
+        B=aux@aux_2
+        #print(B.shape)
         rho+=B
     
     
-    #s_values,s_vec=eigsh(rho,k=x-1)
-    #renorm_s_values=s_values[np.abs(s_values)>eps]
-    #SL_2=-1.0*renorm_s_values@np.log(renorm_s_values)
-    S=-rho@log(rho)
-    SL_2=S.diagonal().sum()
+    #s_values,s_vec=eigsh(rho,k=x-2)
+    s_values=eigvalsh(rho.toarray())
+    renorm_s_values=s_values[np.abs(s_values)>eps]
+    #print(s_values)
+    #print(np.sum(s_values))
+    
+    SL_2=-1.0*renorm_s_values@np.log(renorm_s_values)
+    
 
     return SL_2
 
@@ -135,5 +143,6 @@ def GS_WF(H,eps):
     print(eig_vals)
     
     sparse_eig_vec = csr_matrix(np.where(np.abs(eig_vec) >= eps, eig_vec, 0.0))
+    
     return eig_vals,sparse_eig_vec
 
