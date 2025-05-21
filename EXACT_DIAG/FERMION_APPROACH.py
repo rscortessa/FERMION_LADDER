@@ -87,9 +87,9 @@ def H_ladder_G1(N,t0,t1,t2,v1,v2,d):
             H+=-t0* (cdag(hi,i)*c(hi,k)*f+cdag(hi,k)*c(hi,i)*np.conjugate(f))
     return H
 
-def H_ladder_G2(N,t0,t1,t2,v1,v2,d):
+def H_ladder_G2(N,t0,t1,t2,v1,v2,d,n_fermions=None):
 
-    PBC=True
+    PBC=False
     if PBC==False:
         V1_edges=[(i,i+1,0) for i in range(0,2*N,2)]
         V2_edges=[(i+1,i+2,1) for i in range(0,2*(N-1),2)]
@@ -115,7 +115,7 @@ def H_ladder_G2(N,t0,t1,t2,v1,v2,d):
     N_sites=g.n_nodes
     colored_edges = list(zip(g.edges(), g.edge_colors))
     
-    hi = nk.hilbert.SpinOrbitalFermions(N_sites, s=None)
+    hi = nk.hilbert.SpinOrbitalFermions(N_sites, s=None,n_fermions=n_fermions)
 
     H=0.0
     for ((i,k),a) in colored_edges:
