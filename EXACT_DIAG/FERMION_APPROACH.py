@@ -35,7 +35,7 @@ def S_part(sparse_eig_vec,N_sites,part,eps):
     
     #s_values,s_vec=eigsh(rho,k=x-2)
     s_values=eigvalsh(rho.toarray())
-    renorm_s_values=s_values[np.abs(s_values)>eps]
+    renorm_s_values=s_values[s_values>eps]
     #print(s_values)
     #print(np.sum(s_values))
     
