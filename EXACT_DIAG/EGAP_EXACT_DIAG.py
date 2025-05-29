@@ -75,7 +75,7 @@ for t_aux in t2:
     En=np.zeros(3)
     for n_f in range(len(N_fermions)):
         print("t2=",t_aux)
-        H=Ham(N,t0,t1,t_aux,v1,v2,d)
+        H=Ham(N,t0,t1,t_aux,v1,v2,d,N_fermions[n_f])
         E,sparse_eig_vec=FA.GS_WF(H,eps)
         En[n_f]=E
         save_npz(MASTER_DIR+"/"+"N_"+str(parameters[0])+"T1_"+str(parameters[1])+"V1_"+str(parameters[2])+"D_"+str(parameters[3])+"T2_"+str(ii)+"N_F"+str(N_fermions[n_f])+geo+".npz",sparse_eig_vec)
