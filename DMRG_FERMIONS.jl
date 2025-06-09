@@ -16,15 +16,16 @@ let
   t1 = parse(Float64,ARGS[5])
   t2 = parse(Float64,ARGS[6])
   NS = parse(Int,ARGS[7])
-  sites = siteinds("Fermion", 2*N)
+  sites = siteinds("Electron",N)
   # Initialize a random MPS
   
   
   filename_0 = "DATAM5L" * ARGS[1] * "V1_" * ARGS[2]* "V2_" * ARGS[3] * "t1_" * ARGS[5] * "t2_" * ARGS[6] * "NS" * ARGS[7] * "MPS" * ".txt" # Output file optimization
   filename_1 = "OPTM5L" * ARGS[1] * "V1_" * ARGS[2]* "V2_" * ARGS[3] * "t1_" * ARGS[5] * "t2_" * ARGS[6] * "NS" * ARGS[7] * "MPS" * ".txt" # Output file optimization
-
+  filename_2 = "ENTM5L" * ARGS[1] * "V1_" * ARGS[2]* "V2_" * ARGS[3] * "t1_" * ARGS[5] * "t2_" * ARGS[6] * "NS" * ARGS[7] * "MPS" * ".txt" # Output file optimization
+  
   println("(N,V1,V2,t0,t1,t2,NS,NR,NC)=(",ARGS,")")
-  os=ladder_H(N,V1,V2,t0,t1,t2)
+  os=ladder_H(N,V1,V2,t0,t1,t2,true)
   H = MPO(os, sites)
   println("Good")
   # Run DMRG to find the ground state
@@ -50,7 +51,6 @@ let
 
   # Call the function to sample and save to the file
   sample_mps_to_file(psi0, filename_0, NS)
-  
-  
-  
+  entanglement_mps_to_file(psi0, filename_2,N)
+    
 end
