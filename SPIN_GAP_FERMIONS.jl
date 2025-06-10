@@ -69,9 +69,9 @@ let
   		  psi0=psi
   		  H2 =real(inner(H,psi,H,psi))
 		  E0=energy
-		  
+		  Evar=H2-E0^2		  
 		  open(filename_1,"a") do file1
-     		       write(file1,"$kk","\t","0","\t","$t1","\t","$V1","\t","$t2","\t","$E0","\t","$H2","\n")
+     		       write(file1,"$kk","\t","0","\t","$t1","\t","$V1","\t","$t2","\t","$E0","\t","$Evar","\n")
                   end
 	      end
 
@@ -84,9 +84,9 @@ let
   		  psi1=psi
   		  H2 = real(inner(H,psi,H,psi))
 		  E1=energy
-		  
+		  Evar=H2-E1^2
 		  open(filename_1,"a") do file1
-     		       write(file1,"$kk","\t","1","\t","$t1","\t","$V1","\t","$t2","\t","$E1","\t","$H2","\n")
+     		       write(file1,"$kk","\t","1","\t","$t1","\t","$V1","\t","$t2","\t","$E1","\t","$Evar","\n")
                   end
 	      end
 

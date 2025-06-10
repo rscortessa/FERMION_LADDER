@@ -68,8 +68,9 @@ let
   			  psi0=psi
   			  H2 = real(inner(H,psi,H,psi))
 			  En[m]=energy
+			  Evar=H2-energy^2
 			  open(filename_1,"a") do file1
-      			      write(file1,"$kk","\t","$m","\t","$t1","\t","$V1","\t","$t2","\t","$En[m]","\t","$H2","\n")
+      			      write(file1,"$kk","\t","$m","\t","$t1","\t","$V1","\t","$t2","\t","$energy","\t","$Evar","\n")
 			  end
 		      end
 		      a=totalqn(psi0) 
