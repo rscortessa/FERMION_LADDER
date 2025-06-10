@@ -129,6 +129,14 @@ def H_ladder_G2(N,t0,t1,t2,v1,v2,d,n_fermions=None):
             H+=-t0* (cdag(hi,i)*c(hi,k)*f+cdag(hi,k)*c(hi,i)*np.conjugate(f))
     return H
 
+def N_fermion(N,n_fermions=None):
+    N_sites=2*N
+    hi = nk.hilbert.SpinOrbitalFermions(N_sites, s=None,n_fermions=n_fermions)
+    N_op=0.0
+    for i in range(N_sites):
+        N_op+=nc(hi,i)
+    return N_op
+    
 
  
 def GS_WF(H,eps):
