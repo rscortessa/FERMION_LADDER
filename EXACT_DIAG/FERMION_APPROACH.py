@@ -154,3 +154,17 @@ def GS_WF(H,eps):
     
     return eig_vals,sparse_eig_vec
 
+def GS_AND_EXC_WF(H,eps):
+    #eig_vals,eig_vec=eigsh(H.to_sparse(),k=1,which="SA")
+    
+    eig_vals,eig_vec=eigsh(H.to_sparse())
+    #print(H.to_sparse())
+    #print(eig_vals)
+    #print(len(eig_vec[0]))
+    
+    eig_vals,eig_vec=eigsh(H.to_sparse(),k=2,which="SA")
+    print(eig_vals)
+    
+    sparse_eig_vec = csr_matrix(np.where(np.abs(eig_vec) >= eps, eig_vec, 0.0))
+    
+    return eig_vals,sparse_eig_vec
