@@ -13,6 +13,10 @@ from scipy.linalg import eigvalsh
 from scipy.sparse import csr_matrix
 import numpy as np
 from scipy.stats import log
+from scipy.linalg import eigh
+
+
+
 
 # In[150]:
 
@@ -20,21 +24,30 @@ from scipy.stats import log
 def S_part(sparse_eig_vec,N_sites,part,eps):
     
     x=2**(int(N_sites/part))
+    print(x)
     rho=csr_matrix(np.zeros((x,x)),dtype=complex)
     N_iter=2**(int((part-1)*N_sites/part))
 
+    print("tutto okay")
     for i in range(N_iter):
         aux=sparse_eig_vec[0+x*i:x*(i+1)]
-        #print(aux.shape)
+        print(aux.shape)
         aux_2=aux.getH()
-        #print(aux_2.shape)
+        print(aux_2.shape)
         B=aux@aux_2
-        #print(B.shape)
+        print(B.shape)
         rho+=B
     
     
     #s_values,s_vec=eigsh(rho,k=x-2)
-    s_values=eigvalsh(rho.toarray())
+    print("tutto okay")
+    aux_rho=rho.toarray()
+    aux_rho=(aux_rho+aux_rho.conj().T)/2.0
+    print("tutto okay x2")
+    
+    #s_values=eigvalsh(aux_rho)
+    s_values=eigh(aux_rho, eigvals_only=True)
+    print("va bene")
     renorm_s_values=s_values[s_values>eps]
     #print(s_values)
     #print(np.sum(s_values))
@@ -89,7 +102,7 @@ def H_ladder_G1(N,t0,t1,t2,v1,v2,d):
 
 def H_ladder_G2(N,t0,t1,t2,v1,v2,d,n_fermions=None):
 
-    PBC=False
+    PBC=True
     if PBC==False:
         V1_edges=[(i,i+1,0) for i in range(0,2*N,2)]
         V2_edges=[(i+1,i+2,1) for i in range(0,2*(N-1),2)]
