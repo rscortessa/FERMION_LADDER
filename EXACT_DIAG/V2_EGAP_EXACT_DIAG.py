@@ -79,7 +79,7 @@ for t1 in t1s:
                     print("t1=",t1*DG,"v1=",v1*DG,"v2=",v2*v1*DG,"t2=",t2*t1*DG,"N=",N_fermions[n_f])
                     H=Ham(N,t0,t1*DG,t2*t1*DG,v1*DG,v2*v1*DG,d*DG,N_fermions[n_f])
                     E,sparse_eig_vec=FA.GS_WF(H,eps)
-                    En[n_f]=E
+                    En[n_f]=E[0]
                     save_npz(MASTER_DIR+"/"+"N_"+str(N)+"V1_"+str(v1)+"V2_"+str(v2)+"T1_"+str(t1)+"T2_"+str(t2)+"N"+str(N_fermions[n_f])+"D"+str(d)+geo+".npz",sparse_eig_vec)
                     
                 DE=2*En[1]-En[2]-En[0]
