@@ -514,7 +514,11 @@ class publisher:
 
     def name(self):
         return self.filename+".txt"
-        
+
+    def open(self):
+        if self.file.closed == True:
+            self.file=open(self.filename+".txt","a")
+            
     def write(self,val_variables):
         self.file.write("\t".join(str(val) for val in val_variables) + "\n")
     def close(self):
