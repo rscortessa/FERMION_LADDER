@@ -23,13 +23,17 @@ from scipy.sparse import csr_matrix, save_npz, load_npz
 # The energy scale
 DG=0.01
 # The other parameters...
-N=8
+N=4
 t0=1.0
 
 tps=[i*20 for i in range(6)]
 tms=[i*20 for i in range(6)]
 vps=[i*40 for i in range(5)]
 vms=[i*40 for i in range(5)]
+d=50
+N_sites=2*N
+# Fault tolerance
+eps=10**(-16)
 
 geo="G2"
 
@@ -42,7 +46,7 @@ elif geo=="G2":
 # In[ ]:
 
 
-MASTER_DIR="GAPS_N_"+str(N)+"D_"+str(d)
+MASTER_DIR="V3_GAPS_N_"+str(N)+"D_"+str(d)
 try:
     os.mkdir(MASTER_DIR)
 except:
@@ -55,7 +59,7 @@ except:
 
 var=[N,d]
 name_var=[MASTER_DIR+"/N_","D_"]
-pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","SGAP","E"+geo])
+pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","EGAP","E"+geo])
 pubvar.create()
 
 # In[2]:

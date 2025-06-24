@@ -62,7 +62,7 @@ except:
 
 var=[N,d]
 name_var=[MASTER_DIR+"/N_","D_"]
-pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","EGAP","E1"+geo+"E0"+geo])
+pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","SGAP","E1"+geo+"E0"+geo])
 pubvar.create()
 
 # In[2]:

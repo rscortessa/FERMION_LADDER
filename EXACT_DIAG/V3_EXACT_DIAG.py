@@ -23,7 +23,7 @@ from scipy.sparse import csr_matrix, save_npz, load_npz
 # The energy scale
 DG=0.01
 # The other parameters...
-N=8
+N=4
 t0=1.0
 
 tps=[i*20 for i in range(6)]
@@ -62,7 +62,7 @@ except:
 
 var=[N,d]
 name_var=[MASTER_DIR+"/N_","D_"]
-pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","SL2","SL4","C","E"+geo])
+pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","C","SL2","SL4","E"+geo])
 pubvar.create()
 
 
@@ -87,7 +87,7 @@ for tp in tps:
                 SL4=FA.S_part(sparse_eig_vec,N_sites,4,eps)
                 c_charge=SL2-SL4
                 print("due ")
-                pubvar.write([0.0,v1,0.0,v2,0.0,t1,0.0,t2,0.0,SL2,0.0,SL4,0.0,c_charge,0.0,E[0]])
+                pubvar.write([0.0,v1,0.0,v2,0.0,t1,0.0,t2,0.0,c_charge,0.0,SL2,0.0,SL4,0.0,E[0]])
 pubvar.close()
 
 
