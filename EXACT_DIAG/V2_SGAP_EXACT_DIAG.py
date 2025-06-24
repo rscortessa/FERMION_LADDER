@@ -19,6 +19,9 @@ from scipy.sparse import csr_matrix, save_npz, load_npz
 # In[5]:
 
 
+# In[5]:
+
+
 # The parameters of the model are defined as it follows:
 # The energy scale
 DG=0.01
@@ -49,7 +52,7 @@ elif geo=="G2":
 # In[ ]:
 
 
-MASTER_DIR="RESULTSL"+str(N)+"D"+str(d)+"PBC"
+MASTER_DIR="SGAPS_N_"+str(N)+"D_"+str(d)
 try:
     os.mkdir(MASTER_DIR)
 except:
@@ -62,28 +65,31 @@ except:
 
 var=[N,d]
 name_var=[MASTER_DIR+"/N_","D_"]
-pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","SL2","SL4","C","E"+geo])
+pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","EGAP","E1"+geo+"E0"+geo])
 pubvar.create()
 
-
 # In[2]:
+
+print("WORKING WITH:")
+
+N_fermions=[N]
 
 print("WORKING WITH:")
 for t1 in t1s: 
     for v1 in v1s:
         for v2 in v2s:
             for t2 in t2s:
-                print("t1=",t1*DG,v1*DG,v2*v1*DG,t2*t1*DG)
-                H=Ham(N,t0,t1*DG,t2*t1*DG,v1*DG,v2*v1*DG,d*DG)
-                E,sparse_eig_vec=FA.GS_WF(H,eps)
-                save_npz(MASTER_DIR+"/"+"N_"+str(N)+"V1_"+str(v1)+"V2_"+str(v2)+"T1_"+str(t1)+"T2_"+str(t2)+"D"+str(d)+geo+".npz",sparse_eig_vec)
-                print("ecco li")
-                SL2=FA.S_part(sparse_eig_vec,N_sites,2,eps)
-                print("uno ")
-                SL4=FA.S_part(sparse_eig_vec,N_sites,4,eps)
-                c_charge=SL2-SL4
-                print("due ")
-                pubvar.write([0.0,v1,0.0,v2,0.0,t1,0.0,t2,0.0,SL2,0.0,SL4,0.0,c_charge,0.0,E[0]])
+                En=np.zeros(2)
+                for n_f in range(len(N_fermions)):
+                    print("t1=",t1*DG,"v1=",v1*DG,"v2=",v2*v1*DG,"t2=",t2*t1*DG,"N=",N_fermions[n_f])
+                    H=Ham(N,t0,t1*DG,t2*t1*DG,v1*DG,v2*v1*DG,d*DG,N_fermions[n_f])
+                    E,sparse_eig_vec=FA.GS_AND_EXC_WF(H,eps)
+                    En[0]=E[0]
+                    En[1]=E[1]
+                    save_npz(MASTER_DIR+"/"+"N_"+str(N)+"V1_"+str(v1)+"V2_"+str(v2)+"T1_"+str(t1)+"T2_"+str(t2)+"N"+str(N_fermions[n_f])+"D"+str(d)+geo+".npz",sparse_eig_vec)
+                                   
+                DE=En[1]-En[0]
+                pubvar.write([0.0,v1,0.0,v2,0.0,t1,0.0,t2,0.0,DE,0.0,En[1],0.0,En[0]])
 pubvar.close()
 
 
