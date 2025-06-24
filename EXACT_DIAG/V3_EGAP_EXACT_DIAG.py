@@ -23,7 +23,8 @@ from scipy.sparse import csr_matrix, save_npz, load_npz
 # The energy scale
 DG=0.01
 # The other parameters...
-N=4
+parameters_st=sys.argv
+N=int(parameters_st[1])
 t0=1.0
 
 tps=[i*20 for i in range(6)]
