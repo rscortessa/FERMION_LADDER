@@ -25,18 +25,11 @@ DG=0.01
 # The other parameters...
 N=8
 t0=1.0
-t1s=[10,100]
-v1s=[50,200]
-d=50
-N_sites=2*N
-# Fault tolerance
-eps=10**(-16)
 
-#Here we define the grid based on the parameters....
-Nv2=10
-v2s=[i/(Nv2*1.0) for i in range(Nv2+1)]
-Nt2=10
-t2s=[i/(Nt2*1.0) for i in range(Nt2+1)]
+tps=[i*20 for i in range(6)]
+tms=[i*20 for i in range(6)]
+vps=[i*40 for i in range(5)]
+vms=[i*40 for i in range(5)]
 
 geo="G2"
 
@@ -70,14 +63,18 @@ pubvar.create()
 N_fermions=[N-1,N,N+1]
 
 print("WORKING WITH:")
-for t1 in t1s: 
-    for v1 in v1s:
-        for v2 in v2s:
-            for t2 in t2s:
+for tp in tps: 
+    for tm in tms:
+        for vp in vps:
+            for vm in vms:
+                t1=int((tp+tm)/2.0)
+                t2=int((tp-tm)/2.0)
+                v1=int((vp+vm)/2.0)
+                v2=int((vp-vm)/2.0)
                 En=np.zeros(3)
                 for n_f in range(len(N_fermions)):
-                    print("t1=",t1*DG,"v1=",v1*DG,"v2=",v2*v1*DG,"t2=",t2*t1*DG,"N=",N_fermions[n_f])
-                    H=Ham(N,t0,t1*DG,t2*t1*DG,v1*DG,v2*v1*DG,d*DG,N_fermions[n_f])
+                    print("t1=",t1*DG,"v1=",v1*DG,"v2=",v2*DG,"t2=",t2*DG,"N=",N_fermions[n_f])
+                    H=Ham(N,t0,t1*DG,t2*DG,v1*DG,v2*DG,d*DG,N_fermions[n_f])
                     E,sparse_eig_vec=FA.GS_WF(H,eps)
                     En[n_f]=E
                     save_npz(MASTER_DIR+"/"+"N_"+str(N)+"V1_"+str(v1)+"V2_"+str(v2)+"T1_"+str(t1)+"T2_"+str(t2)+"N"+str(N_fermions[n_f])+"D"+str(d)+geo+".npz",sparse_eig_vec)

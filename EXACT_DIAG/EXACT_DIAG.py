@@ -44,8 +44,8 @@ elif geo=="G2":
     
 # In[ ]:
 
-
-MASTER_DIR="N_"+str(parameters[0])+"T1_"+str(parameters[1])+"V1_"+str(parameters[2])+"D_"+str(parameters[3])+"OBC"
+PBC="PBC"
+MASTER_DIR="N_"+str(parameters[0])+"T1_"+str(parameters[1])+"V1_"+str(parameters[2])+"D_"+str(parameters[3])+"PBC"
 try:
     os.mkdir(MASTER_DIR)
 except:

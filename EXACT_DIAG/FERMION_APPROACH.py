@@ -12,7 +12,7 @@ from scipy.sparse.linalg import eigsh
 from scipy.linalg import eigvalsh
 from scipy.sparse import csr_matrix
 import numpy as np
-from scipy.stats import log
+#from scipy.stats import log
 from scipy.linalg import eigh
 
 
