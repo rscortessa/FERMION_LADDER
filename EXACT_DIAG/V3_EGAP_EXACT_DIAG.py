@@ -61,7 +61,7 @@ var=[N,d]
 name_var=[MASTER_DIR+"/N_","D_"]
 pubvar=class_WF.publisher(name_var,var,["V1","V2","T1","T2","EGAP","E"+geo])
 pubvar.create()
-
+pubvar.close()
 # In[2]:
 
 N_fermions=[N-1,N,N+1]
@@ -81,11 +81,12 @@ for tp in tps:
                     H=Ham(N,t0,t1*DG,t2*DG,v1*DG,v2*DG,d*DG,N_fermions[n_f])
                     E,sparse_eig_vec=FA.GS_WF(H,eps)
                     En[n_f]=E
-                    save_npz(MASTER_DIR+"/"+"N_"+str(N)+"V1_"+str(v1)+"V2_"+str(v2)+"T1_"+str(t1)+"T2_"+str(t2)+"N"+str(N_fermions[n_f])+"D"+str(d)+geo+".npz",sparse_eig_vec)
+                    #save_npz(MASTER_DIR+"/"+"N_"+str(N)+"V1_"+str(v1)+"V2_"+str(v2)+"T1_"+str(t1)+"T2_"+str(t2)+"N"+str(N_fermions[n_f])+"D"+str(d)+geo+".npz",sparse_eig_vec)
                     
                 DE=2*En[1]-En[2]-En[0]
+                pubvar.open()
                 pubvar.write([0.0,v1,0.0,v2,0.0,t1,0.0,t2,0.0,DE,0.0,E[0]])
-pubvar.close()
+                pubvar.close()
 
 
 # In[3]:
